@@ -10,6 +10,7 @@ docker学习总结
              -- no-trunc 内容全部展示
 例子：docker search -f is-official=true ubuntu     搜索官方的ubuntu镜像
 
+
 镜像查看 --  docker images  /  docker image ls
 镜像下载（可以指定版本号） --  docker pull 
 镜像删除 --  docker rmi 名称:版本号 / IMAGE ID          /   docker image rm
