@@ -70,9 +70,112 @@ docker核心技术之容器
     
 3，容器的生命周期
 
-    -- 
+    -- 运行：docker run  ==  docker create + docker start -a 前台模式
+    
+    -- docker run -d 相当于 docker create + docker start | 后台模式
+    
+    -- 暂停： docker pause 
+    
+    -- 关闭:  docker stop
+    
+    -- 重启： docker restart
+    
+    -- 查看日志信息： docker logs
+    
+    -- 容器重命名 docker rename old new
 
 4，容器创建  --  docker create
+
+    --  命令参数:   -t 运行终端； -i 即使没有连接，也要把持STDIN打开；
     
     --  作用：利用镜像创建出一个Created状态的待启动容器
+     
+5,容器运行时 动作：
+
+    -- 容器连接,作用：将当前终端的STDIN，STDOUT，STDERR绑定到正在运行的容器的主进程上实现连接： docker attach 
     
+    -- 容器中执行新命令，作用：在容器中运行一个命令： docker exec 
+    
+  
+容器与镜像的关系
+    
+    -- 容器提交 ：  docker commit   带有历史信息  ，经常用，重点
+    
+        作用：根据容器生成一个新的镜像  
+        
+        命令格式： docker commit [options] CONTAINER [REPOSITORY[:TAG]]
+        
+        命令参数： -a 作者 ；  -c 为创建的镜像假如Dockerfile命令；  -m 提交信息； -p 提交时暂停容器；
+         
+    --  容器导出 : docker export    全新镜像
+        
+        作用： 将容器当前的文件系统导出成一个tar文件
+        
+        命令格式 docker export [options] CONTAINER
+ 
+        参数： -o  filename 
+        
+     --  容器打包的导入 : docker import 
+         
+         作用： 从一个tar文件中导入内容创建一个镜像
+         
+         命令格式: docker import [options] file|URL|- [RESPOSITORTY[:TAG]]
+         
+         
+  Docker核心技术之网络管理 
+    
+      1，docker网络管理
+       
+        容器的网络默认与宿主机，与其他容器都是相互隔离。
+        
+        *  容器中可以运行一些网络应用（如nginx，web应用，数据库等），如果要让外部也可以访问这些容器内运行的网络应用，那么就需要配置网络来实现。
+        
+        *  有可能有的需求下，容器不想让它的网络与宿主机，与其它容器隔离。
+        
+        *  sometimes，容器根本不需要网络 ； （比如计算型任务）
+        
+        *  sometimes，容器需要更高的定制化网络（如定制特殊的集群网络，定制容器间的局域网）。
+        
+        *  sometimes，容器数量特别多，体量很大的一系列容器的网络管理如何
+        
+      2，docker中有五种网络驱动模式 
+      
+        *  bridge network 模式（网桥）：默认的网络模式。类似虚拟机的nat模式
+        
+        *  host network模式（主机）：容器与宿主之间的网络无隔离，即容器直接使用宿主机网络
+        
+        *  None network 模式： 容器禁用所有网络
+        
+        *  Overlay network 模式：利用VXLAN实现的bride模式
+        
+        *  Macvian network模式：容器具备MAc地址，使其显示为网络上的物理设备
+        
+      3，docker 网络管理命令 
+        
+        --  查看已经建立的网络对象 docker network ls   
+        
+        --  创建网络： docker networkk create
+        
+        --  删除网络： docker network rm 
+        
+        --  查看网络详细信息 : docker network inspect
+        
+        --  使用网络： docker run --network 网络名 镜像名
+        
+        --  网络连接与断开： docker network connect/disconnect [-f] 网络名 镜像名
+        
+      4， docker 网络模式简介
+      
+        -- bridge 网络模式 
+        
+          * 宿主机上需要单独的bridge网卡，如默认docker默认创建的docker0
+          
+          * 容器之间，容器与主机之间的网络通信，是借助为每一个容器生成的一对veth pair虚拟网络设备对，进行通信的。一个容器上，另一个在宿主机上
+          
+          * 每创建一个基于bridge网络的容器，都会自动在宿主机上创建一个veth** 虚拟网络设备
+          
+          * 外部无法直接访问容器，需要建立端口映射才能访问
+          
+          * 容器借由veth虚拟设备通过如docker0这种bridge网络设备进行通信
+          
+          * 每一容器具有单独的IP
