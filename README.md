@@ -303,7 +303,7 @@ Docker仓库
 
 搭建带认证的私有仓库 
 
-      -- 1，删除先前创建的五认证的仓库容器： docker rm -f my-registry
+      -- 1，删除先前创建的无认证的仓库容器： docker rm -f my-registry
       
       -- 2,创建存放认证用户名和密码的文件：mkdir /my-registry(可以替换自己路径）/auth -p
       
@@ -317,7 +317,7 @@ Docker仓库
                   
                   -v /my-registry/auth:/auth\
                   
-                  -e "REGISTRY_AUTH=hrpasswd"\
+                  -e "REGISTRY_AUTH=htpasswd"\
                   
                   -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"\
                   
