@@ -264,7 +264,68 @@ docker核心技术之容器
           * 如果挂载一个非空的数据卷到容器中的一个目录中，那么容器中的目录中会显示数据卷中的数据，如果原来容器中的目录中有数据，那么这些原始数据会被隐藏掉
           
           
+Docker仓库 
+    
+    -- docker仓库就是存放docker镜像并有docker pull方法下载的云环境
+    
+    -- docker仓库分为私有仓库和共有仓库
+      
+      * 共有仓库指docker hub（官方）等开放给用户使用，允许用户管理镜像
+      
+      * 私有仓库指由用户自行搭建的存放镜像的云环境
           
+搭建无认证私有仓库
+    
+    -- 1，在需要搭建仓库的服务器上安装docker
+    
+    -- 2，在服务器上，从docker hub下载registry仓库： docker pull registry
+    
+    -- 3，在服务器上，启动仓库： docker run -d -ti --restart always\ --name my-registry\ -p 8000:5000\ -v /my-registry/registry:/var/lib/registry\ registry
+    
+        * 注意：registry内部对外开放端口是5000，默认情况下，会镜像存放于容器内的/var/lib/registry（官网Dockerfile中查看）目录下，这样如果容器被删除，则存放于容器中的镜像也会丢失。
+         
+        * 本地利用curl 服务器IP:8000/v2/_catalog 查看当前仓库中的存放的镜像列表。（注意打开8000端口访问）
+                                                  
+                                          
+私有仓库 -上传、下载镜像
+
+      -- 1,利用docker tag重命名需要上传的镜像：docker tag IMAGE 服务器IP:端口/IMAGE_NAME
+      
+      -- 2，利用docker push上传刚刚重命名的镜像：docker push 服务器IP：端口/centos
+      
+      -- 3，下载：docker pull 服务器IP：端口/IMAGE_NAME
+      
+      * 注意：必须重命名为服务器IP：端口/IMAGE_NAME
+      
+      * 如果push出现了类似htps的错误那么需要往配置文件/etc/docker/daemon.json里添加："insecure-registries":["服务器IP:端口"]  ,然后重启docker
+                                                  
           
+
+搭建带认证的私有仓库 
+
+      -- 1，删除先前创建的五认证的仓库容器： docker rm -f my-registry
+      
+      -- 2,创建存放认证用户名和密码的文件：mkdir /my-registry(可以替换自己路径）/auth -p
+      
+      -- 3,创建密码验证文件，注意将USERNAME和PASSWORD替换为设置的用户名和密码：
           
+          docker run --entrypoint htpasswd registry -Bbn USERNAME PASSWORD > /my-registry/auth/htpasswd
           
+      -- 4,重新启动镜像
+          
+          docker run -d -p:8000：5000 --restart=always --name docker-registry\ -v/my-registry/registry:/var/lib/registry\
+                  
+                  -v /my-registry/auth:/auth\
+                  
+                  -e "REGISTRY_AUTH=hrpasswd"\
+                  
+                  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"\
+                  
+                  -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd"\ registry
+                
+           *  登录： docker login -u username -p password 服务器IP：端口
+           
+           *  执行pull或者push命令
+           
+           *  操作完毕后，可以推出登录 docker logout 服务器IP：端口
+       
