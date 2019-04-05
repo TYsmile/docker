@@ -328,4 +328,20 @@ Docker仓库
            *  执行pull或者push命令
            
            *  操作完毕后，可以推出登录 docker logout 服务器IP：端口
+           
+Docker核心技术之dockerfile 
+
+    -- dockerfile简介
+    
+      * Dockerfile其实就是根据特定的语法格式撰写出来的一个普通的文本文件
+      
+      *利用docker build命令依次执行在Dockerfile中定义的一系列命令，最终生成一个新的镜像（定制镜像）
+      
+    --dockerfile示例和使用
+       
+       * docker build [OPTIONS] PATH | URL | -
+       
+    -- Dockerfile特征
+    
+        * 
        
