@@ -383,3 +383,23 @@ Docker核心技术之dockerfile
        
        *  SHELL ： 更改执行shell命令的程序，linux的默认时shell是[ "/bin/sh" , "-c"] , Windows 的是 [ "cmd" , "/S", "/C"]
        
+
+Dokcer Compose 
+
+    -- 简介：一次性的定义和管理多个容器的启动和关闭
+    
+    -- Docker Compose File Top配置参数
+      
+        *   version ：指定Docker Compose File版本号
+        
+        *   services ：定义多个服务并配置启动参数
+        
+        *   volumes ：声明或创建在多个服务中共同使用的数据卷对象
+        
+        *   networks ：定义在多个服务中共同使用的网络对象
+        
+        *   configs ：声明将在本服务中要使用的一些配置文件
+        
+        *   secrets ：声明将在本服务中要使用的一些秘匙，密码文件
+        
+        *   x-*** ： 自定义配置，主要用于复用相同的配置 
