@@ -105,7 +105,7 @@ docker核心技术之容器
         
         命令格式： docker commit [options] CONTAINER [REPOSITORY[:TAG]]
         
-        命令参数： -a 作者 ；  -c 为创建的镜像假如Dockerfile命令；  -m 提交信息； -p 提交时暂停容器；
+        命令参数： -a 作者 ；  -c 为创建的镜像加如Dockerfile命令；  -m 提交信息； -p 提交时暂停容器；
          
     --  容器导出 : docker export    全新镜像
         
